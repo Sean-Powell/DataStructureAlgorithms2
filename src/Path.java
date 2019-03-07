@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class Path {
+class Path {
     private int currentLength;
     private ArrayList<Integer> visited;
 
@@ -20,7 +20,7 @@ public class Path {
         visited.set(index, 1);
     }
 
-    public int getCurrentLength() {
+    int getCurrentLength() {
         return currentLength;
     }
 

@@ -1,5 +1,5 @@
 class Connection {
-    private String symbol = "";
+    private String symbol;
     private int index;
 
     Connection(String symbol, int index){
