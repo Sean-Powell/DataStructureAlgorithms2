@@ -13,6 +13,9 @@ public class start {
         int startState = random.nextInt(stateNumber);
         ArrayList<Node> DFA = new ArrayList<>();
 
+        System.out.println("created " + stateNumber + " states");
+        System.out.println("Start state is " + startState);
+        System.out.println("-------------");
         for(int i = 0; i < stateNumber; i++){
             Node state = new Node();
             DFA.add(state);
@@ -33,10 +36,9 @@ public class start {
 
         }
 
-        BFS search = new BFS(startState, DFA);
+        new BFS(startState, DFA);
 
-        System.out.println("created " + stateNumber + " states");
-        System.out.println("Start state is " + startState);
+
 
         ArrayList<Node> minimalDFA = hopcroftsAlgorithm.hopcrofts(DFA);
     }

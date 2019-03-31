@@ -80,6 +80,7 @@ class HopcroftsAlgorithm {
             }
         }
 
+        //todo construct minimal DFA from P
         return null;
     }
 
@@ -106,7 +107,6 @@ class HopcroftsAlgorithm {
     }
 
     //set division function
-
     //setA \ setB
     private ArrayList<Node> setDivision(ArrayList<Node> setA, ArrayList<Node> setB) {
         ArrayList<Node> division = new ArrayList<>();

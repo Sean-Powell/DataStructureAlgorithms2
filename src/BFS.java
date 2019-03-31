@@ -23,15 +23,15 @@ class BFS {
         createPath(DFA.get(startIndex), null, DFA);
 
         int debug_unreachable_count = 0;
-        for(int i = 0; i < shortestPathLength.size(); i++){
-            if(shortestPathLength.get(i) == -1){
+        for (Integer aShortestPathLength : shortestPathLength) {
+            if (aShortestPathLength == -1) {
                 debug_unreachable_count++;
             }
-            System.out.println((i + 1) + ": depth = " + shortestPathLength.get(i));
         }
 
         System.out.println("Depth of tree is: " + Collections.max(shortestPathLength));
         System.out.println("There is " + debug_unreachable_count + " unreachable states ");
+        System.out.println("-------------");
     }
 
     private void createPath(Node node, Path path, ArrayList<Node> dfa){
