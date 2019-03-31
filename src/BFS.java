@@ -31,7 +31,7 @@ class BFS {
         }
 
         System.out.println("Depth of tree is: " + Collections.max(shortestPathLength));
-        System.out.println("There is " + debug_unreachable_count + " unreachable states");
+        System.out.println("There is " + debug_unreachable_count + " unreachable states ");
     }
 
     private void createPath(int currentIndex, Path path, ArrayList<Node> dfa){

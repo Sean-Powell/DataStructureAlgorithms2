@@ -2,6 +2,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class start {
+    static HopcroftsAlgorithm hopcroftsAlgorithm = new HopcroftsAlgorithm();
+
     public static void main(String[] args){
         int min = 16;
         int max = 64;
@@ -32,5 +34,7 @@ public class start {
 
         System.out.println("created " + stateNumber + " states");
         System.out.println("Start state is " + startState);
+
+        ArrayList<Node> minimalDFA = hopcroftsAlgorithm.hopcrofts(DFA);
     }
 }
