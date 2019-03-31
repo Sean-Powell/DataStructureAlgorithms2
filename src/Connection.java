@@ -1,9 +1,9 @@
 class Connection {
     private String symbol;
-    private int index;
+    private Node connectedTo;
 
-    Connection(String symbol, int index){
-        this.index = index;
+    Connection(String symbol, Node connectedTo){
+        this.connectedTo = connectedTo;
         this.symbol = symbol;
     }
 
@@ -11,7 +11,7 @@ class Connection {
         return symbol;
     }
 
-    int getIndex(){
-        return index;
+    Node getNode(){
+        return connectedTo;
     }
 }

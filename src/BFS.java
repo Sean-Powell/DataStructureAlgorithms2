@@ -20,7 +20,7 @@ class BFS {
 
         size = DFA.size();
         System.out.println("Path length is " + DFA.size());
-        createPath(startIndex, null, DFA);
+        createPath(DFA.get(startIndex), null, DFA);
 
         int debug_unreachable_count = 0;
         for(int i = 0; i < shortestPathLength.size(); i++){
@@ -34,26 +34,27 @@ class BFS {
         System.out.println("There is " + debug_unreachable_count + " unreachable states ");
     }
 
-    private void createPath(int currentIndex, Path path, ArrayList<Node> dfa){
+    private void createPath(Node node, Path path, ArrayList<Node> dfa){
         if(path == null){
-            path = new Path(size);
+            path = new Path();
         }
 
-        if(!path.checkVisited(currentIndex)){
-            path.setVisited(currentIndex);
+        if(!path.checkVisited(node)){
+            path.setVisited(node);
         }else{
             return;
         }
+
+        int currentIndex = dfa.indexOf(node);
 
         if(shortestPathLength.get(currentIndex) == -1 || shortestPathLength.get(currentIndex) > path.getCurrentLength()){
             shortestPathLength.set(currentIndex, path.getCurrentLength());
         }
 
         path.incrementLength();
-        Node currentNode = dfa.get(currentIndex);
-        ArrayList<Connection> connections = currentNode.getConnections();
+        ArrayList<Connection> connections = node.getConnections();
         for(Connection connection: connections){
-            createPath(connection.getIndex(), path, dfa);
+            createPath(connection.getNode(), path, dfa);
         }
     }
 }

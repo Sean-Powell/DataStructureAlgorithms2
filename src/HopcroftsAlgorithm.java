@@ -1,35 +1,32 @@
-import jdk.nashorn.internal.ir.WhileNode;
-
 import java.util.ArrayList;
 
-public class HopcroftsAlgorithm {
+class HopcroftsAlgorithm {
     /*
     P := {F, Q \ F}; Done
     W := {F};
-    while (W is not empty) do
+    while (W is not empty) d:
         choose and remove a set A from W
-        for each c in Σ do
-              let X be the set of states for which a transition on c leads to a state in A
-            for each set Y in P for which X ∩ Y is nonempty and Y \ X is nonempty do
-                   replace Y in P by the two sets X ∩ Y and Y \ X
+        for each c in Σ do:
+            let X be the set of states for which a transition on c leads to a state in A
+            for each set Y in P for which X ∩ Y is nonempty and Y \ X is nonempty do:
+                replace Y in P by the two sets X ∩ Y and Y \ X
                 if Y is in W
-                        replace Y in W by the same two sets
+                     replace Y in W by the same two sets
                 else
-                        if |X ∩ Y| <= |Y \ X|
-                             add X ∩ Y to W
-                        else
-                             add Y \ X to W
+                     if |X ∩ Y| <= |Y \ X|
+                           add X ∩ Y to W
+                     else
+                           add Y \ X to W
             end;
         end;
     end;
+    */
 
-    https://www.reddit.com/r/learnprogramming/comments/8jfom9/hopcrofts_dfa_minimization_algorithm_using_java/
-     */
-    ArrayList<Node> hopcrofts(ArrayList<Node> DFA){
+    ArrayList<Node> hopcrofts(ArrayList<Node> DFA) {
         ArrayList<ArrayList<Node>> P = new ArrayList<>();
         ArrayList<Node> F = new ArrayList<>();
-        for(Node node: DFA){
-            if(!node.getRejection()){
+        for (Node node : DFA) {
+            if (!node.getRejection()) {
                 F.add(node);
             }
         }
@@ -39,28 +36,69 @@ public class HopcroftsAlgorithm {
         P.add(F);
         P.add(Q);
 
-        while(!F.isEmpty()){
-            Node node = F.get(0);
-            F.remove(node);
+        ArrayList<ArrayList<Node>> W = new ArrayList<>();
+        W.add(F);
 
+        while (!W.isEmpty()) {
+            ArrayList<Node> A = W.get(0);
+            W.remove(A);
 
+            ArrayList<Node> X = new ArrayList<>();
+
+            for (Node node : DFA) {
+                for (Connection connection : node.getConnections()) {
+                    Node tempNode = connection.getNode();
+
+                    if (A.contains(tempNode)) {
+                        X.add(tempNode);
+                    }
+                }
+            }
+
+            for (int i = 0; i < P.size(); i++) {
+                ArrayList<Node> Y = P.get(i);
+                ArrayList<Node> intersection = setIntersection(X, Y);
+                ArrayList<Node> division = setDivision(Y, X);
+
+                if (!intersection.isEmpty() && !division.isEmpty()) {
+                    P.remove(Y);
+                    P.add(intersection);
+                    P.add(division);
+
+                    if (W.contains(Y)) {
+                        W.remove(Y);
+                        W.add(division);
+                        W.add(intersection);
+                    } else {
+                        if (intersection.size() <= division.size()) {
+                            W.add(intersection);
+                        } else {
+                            W.add(division);
+                        }
+                    }
+                }
+            }
         }
+
         return null;
     }
 
     //intersection function
-    private ArrayList<Node> setInterscetion(ArrayList<Node> setA, ArrayList<Node> setB){
+    private ArrayList<Node> setIntersection(ArrayList<Node> setA, ArrayList<Node> setB) {
         ArrayList<Node> intersected = new ArrayList<>();
-        for(Node aNode: setA){
+        ArrayList<Node> tempNodes = new ArrayList<>(setA);
+        for (int i = 0; i < tempNodes.size(); i++) {
+            Node aNode = tempNodes.get(i);
             boolean found = false;
-            for(Node bNode: setB){
-                if(aNode == bNode){
+            for (Node bNode : setB) {
+                if (aNode == bNode) {
                     found = true;
                 }
             }
 
-            if(found){
-                setA.remove(aNode);
+            if (found) {
+                tempNodes.remove(aNode);
+                intersected.add(aNode);
             }
         }
 
@@ -69,18 +107,19 @@ public class HopcroftsAlgorithm {
 
     //set division function
 
-    private ArrayList<Node> setDivision(ArrayList<Node> setA, ArrayList<Node> setB){
+    //setA \ setB
+    private ArrayList<Node> setDivision(ArrayList<Node> setA, ArrayList<Node> setB) {
         ArrayList<Node> division = new ArrayList<>();
-        for(Node bNode: setB){
+        for (Node aNode : setA) {
             boolean found = false;
-            for(Node aNode: setA){
-                if(bNode == aNode){
+            for (Node bNode : setB) {
+                if (bNode == aNode) {
                     found = true;
                 }
             }
 
-            if(!found){
-                division.add(bNode);
+            if (!found) {
+                division.add(aNode);
             }
         }
 

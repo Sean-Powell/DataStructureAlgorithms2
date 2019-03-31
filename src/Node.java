@@ -13,8 +13,8 @@ public class Node {
         reject = rejectionValue;
     }
 
-    void addConnection(int connectionIndex, String symbol){
-        connections.add(new Connection(symbol, connectionIndex));
+    void addConnection(Node connectedTo, String symbol){
+        connections.add(new Connection(symbol, connectedTo));
     }
 
     boolean getRejection(){

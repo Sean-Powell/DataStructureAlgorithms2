@@ -2,29 +2,26 @@ import java.util.ArrayList;
 
 class Path {
     private int currentLength;
-    private ArrayList<Integer> visited;
+    private ArrayList<Node> visited;
 
-    Path(int size){
+    Path(){
         currentLength = 0;
         visited = new ArrayList<>();
-        for(int i = 0; i < size; i++){
-            visited.add(0);
-        }
     }
 
     void incrementLength(){
         currentLength++;
     }
 
-    void setVisited(int index){
-        visited.set(index, 1);
+    void setVisited(Node node){
+        visited.add(node);
     }
 
     int getCurrentLength() {
         return currentLength;
     }
 
-    boolean checkVisited(int index){
-        return visited.get(index) == 1;
+    boolean checkVisited(Node node){
+        return visited.contains(node);
     }
 }

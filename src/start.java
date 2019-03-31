@@ -14,20 +14,23 @@ public class start {
         ArrayList<Node> DFA = new ArrayList<>();
 
         for(int i = 0; i < stateNumber; i++){
+            Node state = new Node();
+            DFA.add(state);
+        }
+
+        for(int i = 0; i < stateNumber; i++){
             int aConnectionIndex = random.nextInt(stateNumber);
             int bConnectionIndex = random.nextInt(stateNumber);
             int rejection = random.nextInt(2);
-            Node state = new Node();
-
             if(rejection == 0){
-                state.setReject(false);
+                DFA.get(i).setReject(false);
             }else{
-                state.setReject(true);
+                DFA.get(i).setReject(true);
             }
 
-            state.addConnection(aConnectionIndex, "a");
-            state.addConnection(bConnectionIndex, "b");
-            DFA.add(state);
+            DFA.get(i).addConnection(DFA.get(aConnectionIndex), "a");
+            DFA.get(i).addConnection(DFA.get(bConnectionIndex), "b");
+
         }
 
         BFS search = new BFS(startState, DFA);
