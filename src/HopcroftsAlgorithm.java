@@ -31,7 +31,7 @@ class HopcroftsAlgorithm {
             }
         }
 
-        ArrayList<Node> Q = setDivision(F, DFA);
+        ArrayList<Node> Q = setDivision(DFA, F);
 
         P.add(F);
         P.add(Q);
