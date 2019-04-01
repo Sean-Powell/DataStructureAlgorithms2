@@ -80,8 +80,13 @@ class HopcroftsAlgorithm {
             }
         }
 
-        //todo construct minimal DFA from P
-        return null;
+        //todo find new start state
+        ArrayList<Node> M = new ArrayList<>();
+        for(ArrayList<Node> list: P){
+            M.addAll(list);
+        }
+
+        return M;
     }
 
     //intersection function
