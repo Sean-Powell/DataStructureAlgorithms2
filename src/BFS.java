@@ -47,6 +47,11 @@ class BFS {
 
         int currentIndex = dfa.indexOf(node);
 
+        if(currentIndex == -1){
+            System.out.println("Node could not be found in the DFA");
+            return;
+        }
+
         if(shortestPathLength.get(currentIndex) == -1 || shortestPathLength.get(currentIndex) > path.getCurrentLength()){
             shortestPathLength.set(currentIndex, path.getCurrentLength());
         }

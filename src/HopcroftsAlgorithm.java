@@ -1,10 +1,13 @@
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.ListIterator;
+
 
 class HopcroftsAlgorithm {
     /*
     P := {F, Q \ F}; Done
     W := {F};
-    while (W is not empty) d:
+    while (W is not empty) do:
         choose and remove a set A from W
         for each c in Σ do:
             let X be the set of states for which a transition on c leads to a state in A
@@ -22,112 +25,157 @@ class HopcroftsAlgorithm {
     end;
     */
 
-    ArrayList<Node> hopcrofts(ArrayList<Node> DFA) {
-        ArrayList<ArrayList<Node>> P = new ArrayList<>();
+    private SetOperations<Node> setOperations = new SetOperations<>();
+
+    ArrayList<Node> hopcroft(ArrayList<Node> Q) {
         ArrayList<Node> F = new ArrayList<>();
-        for (Node node : DFA) {
+        for (Node node : Q) {
             if (!node.getRejection()) {
                 F.add(node);
             }
         }
 
-        ArrayList<Node> Q = setDivision(DFA, F);
-
+        ArrayList<ArrayList<Node>> P = new ArrayList<>();
+//            P := {F, Q \ F}; Done
+        P.add(setOperations.division(Q, F));
         P.add(F);
-        P.add(Q);
-
+//            W := {F};
         ArrayList<ArrayList<Node>> W = new ArrayList<>();
         W.add(F);
-
+//            while (W is not empty) do:
         while (!W.isEmpty()) {
+
+//                choose and remove a set A from W
             ArrayList<Node> A = W.get(0);
-            W.remove(A);
+            W.remove(0);
+            ArrayList<Node> X = obtainX(Q, A, "a");
+//                for each c in Σ do:
+//            let X be the set of states for which a transition on c leads to a state in A
 
-            ArrayList<Node> X = new ArrayList<>();
 
-            for (Node node : DFA) {
-                for (Connection connection : node.getConnections()) {
-                    Node tempNode = connection.getNode();
+            setDifferenceCalculation(P, W, X);
 
-                    if (A.contains(tempNode)) {
-                        X.add(tempNode);
-                    }
-                }
-            }
+            X = obtainX(Q, A, "b");
+            setDifferenceCalculation(P, W, X);
+//
+//                    for each set Y in P for which X ∩ Y is nonempty and Y \ X is nonempty do:
+//                        replace Y in P by the two sets X ∩ Y and Y \ X
+//                        if Y is in W
+//                            replace Y in W by the same two sets
+//                        else
+//                            if |X ∩ Y| <= |Y \ X|
+//                                add X ∩ Y to W
+//                            else
+//                                add Y \ X to W
+        }
 
-            for (int i = 0; i < P.size(); i++) {
-                ArrayList<Node> Y = P.get(i);
-                ArrayList<Node> intersection = setIntersection(X, Y);
-                ArrayList<Node> division = setDivision(Y, X);
+        return null;
+    }
 
-                if (!intersection.isEmpty() && !division.isEmpty()) {
-                    P.remove(Y);
-                    P.add(intersection);
-                    P.add(division);
+    private void setDifferenceCalculation(ArrayList<ArrayList<Node>> p, ArrayList<ArrayList<Node>> w, ArrayList<Node> x) {
+        for (ListIterator<ArrayList<Node>> iterator = p.listIterator(); iterator.hasNext(); ) {
+            ArrayList<Node> Y = iterator.next();
+            ArrayList<Node> intersection = setOperations.intersection(x, Y);
+            ArrayList<Node> division = setOperations.division(Y, x);
 
-                    if (W.contains(Y)) {
-                        W.remove(Y);
-                        W.add(division);
-                        W.add(intersection);
+            if (!intersection.isEmpty() && !division.isEmpty()) {
+                iterator.remove();
+                iterator.add(intersection);
+                iterator.add(division);
+                if (w.contains(Y)) {
+                    w.remove(Y);
+                    w.add(intersection);
+                    w.add(division);
+                } else {
+                    if (intersection.size() <= division.size()) {
+                        w.add(intersection);
                     } else {
-                        if (intersection.size() <= division.size()) {
-                            W.add(intersection);
-                        } else {
-                            W.add(division);
-                        }
+                        w.add(division);
                     }
                 }
             }
         }
-
-        //todo find new start state
-        ArrayList<Node> M = new ArrayList<>();
-        for(ArrayList<Node> list: P){
-            M.addAll(list);
-        }
-
-        return M;
     }
 
-    //intersection function
-    private ArrayList<Node> setIntersection(ArrayList<Node> setA, ArrayList<Node> setB) {
-        ArrayList<Node> intersected = new ArrayList<>();
-        ArrayList<Node> tempNodes = new ArrayList<>(setA);
-        for (int i = 0; i < tempNodes.size(); i++) {
-            Node aNode = tempNodes.get(i);
-            boolean found = false;
-            for (Node bNode : setB) {
-                if (aNode == bNode) {
-                    found = true;
-                }
-            }
 
-            if (found) {
-                tempNodes.remove(aNode);
-                intersected.add(aNode);
+    ArrayList<Node> obtainX(ArrayList<Node> Q, ArrayList<Node> A, String symbol) {
+        ArrayList<Node> X = new ArrayList<>();
+
+        for (Node node : Q) {
+            Connection con = node.getConnection(symbol);
+            Node connectionNode = con.getNode();
+            if (A.contains(connectionNode)) {
+                X.add(connectionNode);
             }
         }
 
-        return intersected;
+        return X;
     }
 
-    //set division function
-    //setA \ setB
-    private ArrayList<Node> setDivision(ArrayList<Node> setA, ArrayList<Node> setB) {
-        ArrayList<Node> division = new ArrayList<>();
-        for (Node aNode : setA) {
-            boolean found = false;
-            for (Node bNode : setB) {
-                if (bNode == aNode) {
-                    found = true;
-                }
-            }
-
-            if (!found) {
-                division.add(aNode);
-            }
-        }
-
-        return division;
-    }
+//    ArrayList<Node> hopcrofts(ArrayList<Node> DFA) {
+//        ArrayList<ArrayList<Node>> P = new ArrayList<>();
+//        ArrayList<Node> F = new ArrayList<>();
+//        for (Node node : DFA) {
+//            if (!node.getRejection()) {
+//                F.add(node);
+//            }
+//        }
+//
+//        ArrayList<Node> Q = setOperations.division(DFA, F);
+//
+//        P.add(F);
+//        P.add(Q);
+//
+//        ArrayList<ArrayList<Node>> W = new ArrayList<>();
+//        W.add(F);
+//
+//        while (!W.isEmpty()) {
+//            ArrayList<Node> A = W.get(0);
+//            W.remove(A);
+//
+//            ArrayList<Node> X = new ArrayList<>();
+//
+//            for (Node node : DFA) {
+//                for (Connection connection : node.getConnections()) {
+//                    Node tempNode = connection.getNode();
+//
+//                    if (A.contains(tempNode)) {
+//                        X.add(tempNode);
+//                    }
+//                }
+//            }
+//
+//            for (int i = 0; i < P.size(); i++) {
+//                ArrayList<Node> Y = P.get(i);
+//                ArrayList<Node> intersection = setOperations.intersection(X, Y);
+//                ArrayList<Node> division = setOperations.division(Y, X);
+//
+//                if (!intersection.isEmpty() && !division.isEmpty()) {
+//                    P.remove(Y);
+//                    P.add(intersection);
+//                    P.add(division);
+//
+//                    if (W.contains(Y)) {
+//                        W.remove(Y);
+//                        W.add(division);
+//                        W.add(intersection);
+//                    } else {
+//                        if (intersection.size() <= division.size()) {
+//                            W.add(intersection);
+//                        } else {
+//                            W.add(division);
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
+//        //todo find new start state
+//        ArrayList<Node> M = new ArrayList<>();
+//        for(ArrayList<Node> list: P){
+//            M.addAll(list);
+//        }
+//
+//        return M;
 }
+

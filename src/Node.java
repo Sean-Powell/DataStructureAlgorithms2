@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class Node {
+class Node {
     private boolean reject;
     private ArrayList<Connection> connections;
 
@@ -17,6 +17,15 @@ public class Node {
         connections.add(new Connection(symbol, connectedTo));
     }
 
+    Connection getConnection(String symbol){
+        for(Connection connection: connections){
+            if(connection.getSymbol().equals(symbol)){
+                return connection;
+            }
+        }
+
+        return null;
+    }
     boolean getRejection(){
         return reject;
     }

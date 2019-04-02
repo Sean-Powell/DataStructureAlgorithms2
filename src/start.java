@@ -1,20 +1,22 @@
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Set;
 
 public class start {
     static HopcroftsAlgorithm hopcroftsAlgorithm = new HopcroftsAlgorithm();
-
+    private static SetOperations<Integer> setOperations = new SetOperations<>();
     public static void main(String[] args){
         int min = 16;
         int max = 64;
         Random random = new Random();
         //generates a random number from 0-48 and then adds 16, this obtains a number from 16-64
         int stateNumber = random.nextInt((max - min) + 1) + min;
-        int startState = random.nextInt(stateNumber);
+        int startStateIndex = random.nextInt(stateNumber);
+
         ArrayList<Node> DFA = new ArrayList<>();
 
         System.out.println("created " + stateNumber + " states");
-        System.out.println("Start state is " + startState);
+        System.out.println("Start state is " + startStateIndex);
         System.out.println("-------------");
         for(int i = 0; i < stateNumber; i++){
             Node state = new Node();
@@ -36,10 +38,12 @@ public class start {
 
         }
 
-        new BFS(startState, DFA);
+        Node startState = DFA.get(startStateIndex);
+        new BFS(startStateIndex, DFA);
 
+        ArrayList<Node> minimalDFA = hopcroftsAlgorithm.hopcroft(DFA);
 
-
-        ArrayList<Node> minimalDFA = hopcroftsAlgorithm.hopcrofts(DFA);
+        int newStartStateIndex = minimalDFA.indexOf(startState);
+        new BFS(newStartStateIndex, minimalDFA);
     }
 }
