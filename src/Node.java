@@ -27,7 +27,7 @@ class Node {
         return null;
     }
     boolean getRejection(){
-        return reject;
+        return !reject;
     }
 
     ArrayList<Connection> getConnections(){

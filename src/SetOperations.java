@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class SetOperations<T> {
+class SetOperations<T> {
     //intersection function
     ArrayList<T> intersection(ArrayList<T> setA, ArrayList<T> setB) {
         ArrayList<T> intersected = new ArrayList<>();

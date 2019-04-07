@@ -23,14 +23,21 @@ class BFS {
         createPath(DFA.get(startIndex), null, DFA);
 
         int debug_unreachable_count = 0;
-        for (Integer aShortestPathLength : shortestPathLength) {
-            if (aShortestPathLength == -1) {
+
+        ArrayList<Node> toRemove = new ArrayList<>();
+        for(int i = 0; i < shortestPathLength.size(); i++){
+            Integer currentPathLength = shortestPathLength.get(i);
+            if(currentPathLength == -1){
                 debug_unreachable_count++;
+                //remove unreachableState;
+                toRemove.add(DFA.get(i));
             }
         }
 
+        DFA.removeAll(toRemove);
+
         System.out.println("Depth of tree is: " + Collections.max(shortestPathLength));
-        System.out.println("There is " + debug_unreachable_count + " unreachable states ");
+        System.out.println("There was " + debug_unreachable_count + " unreachable states which were removed");
         System.out.println("-------------");
     }
 

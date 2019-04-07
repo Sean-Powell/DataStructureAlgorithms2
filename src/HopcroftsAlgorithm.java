@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.ListIterator;
 
 
@@ -30,7 +29,7 @@ class HopcroftsAlgorithm {
     ArrayList<Node> hopcroft(ArrayList<Node> Q) {
         ArrayList<Node> F = new ArrayList<>();
         for (Node node : Q) {
-            if (!node.getRejection()) {
+            if (node.getRejection()) {
                 F.add(node);
             }
         }
@@ -98,7 +97,7 @@ class HopcroftsAlgorithm {
     }
 
 
-    ArrayList<Node> obtainX(ArrayList<Node> Q, ArrayList<Node> A, String symbol) {
+    private ArrayList<Node> obtainX(ArrayList<Node> Q, ArrayList<Node> A, String symbol) {
         ArrayList<Node> X = new ArrayList<>();
 
         for (Node node : Q) {
