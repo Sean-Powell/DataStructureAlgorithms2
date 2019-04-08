@@ -9,7 +9,7 @@ class Node {
         connections = new ArrayList<>();
     }
 
-    void setReject(boolean rejectionValue){
+    void setRejection(boolean rejectionValue){
         reject = rejectionValue;
     }
 

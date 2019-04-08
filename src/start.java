@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class start {
-    static HopcroftsAlgorithm hopcroftsAlgorithm = new HopcroftsAlgorithm();
+//    static HopcroftsAlgorithm hopcroftsAlgorithm = new HopcroftsAlgorithm();
     private static SetOperations<Integer> setOperations = new SetOperations<>();
     private static TestingStrings testingStrings = new TestingStrings();
     public static void main(String[] args){
@@ -28,9 +28,9 @@ public class start {
             int bConnectionIndex = random.nextInt(stateNumber);
             int rejection = random.nextInt(2);
             if(rejection == 0){
-                DFA.get(i).setReject(false);
+                DFA.get(i).setRejection(false);
             }else{
-                DFA.get(i).setReject(true);
+                DFA.get(i).setRejection(true);
             }
 
             DFA.get(i).addConnection(DFA.get(aConnectionIndex), "a");
@@ -42,7 +42,7 @@ public class start {
         new BFS(startStateIndex, DFA);
 
         //TODO remove unreachable states
-        ArrayList<Node> minimalDFA = hopcroftsAlgorithm.hopcroft(DFA);
+//        ArrayList<Node> minimalDFA = hopcroftsAlgorithm.hopcroft(DFA, startState);
 
         testingStrings.testStrings(testingStrings.createTestSets(), startState);
 
