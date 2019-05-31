@@ -1,4 +1,3 @@
-package NonBrokenHopefully;
 
 import java.util.Random;
 
@@ -31,10 +30,6 @@ class DFSA {
             }else{
                 transitions[i][2] = 1;
             }
-        }
-
-        for(int i = 0; i < transitions.length; i++){
-            System.out.println(i + " - a: " + transitions[i][0] + ", b: " + transitions[i][1]);
         }
     }
 

@@ -1,4 +1,3 @@
-package NonBrokenHopefully;
 
 import java.util.ArrayList;
 import java.util.ListIterator;
@@ -36,10 +35,11 @@ class Hopcrofts {
 //            setDifferenceCalculation(P, W, x);
         }
 
-        int[][] newTransitionTable = createTransitionTable(P, dfsa.getTransitionTable());
+        int[][] reconstructedTransitionTable = reconstructTransitionTable(P, dfsa.getTransitionTable());
         int newStartState = findStartState(P, startState);
-        DFSA m = new DFSA(newTransitionTable.length, newStartState);
-        m.setTransitions(newTransitionTable);
+
+        DFSA m = new DFSA(reconstructedTransitionTable.length, newStartState);
+        m.setTransitions(reconstructedTransitionTable);
 
         return m;
     }
@@ -129,40 +129,36 @@ class Hopcrofts {
         return division;
     }
 
-    //todo try fix this, then hopcroft works correctly
-    private int[][] createTransitionTable(ArrayList<ArrayList<Integer>> P, int[][] originalTransitions){ //i don't think this works correctly
+    private int[][] reconstructTransitionTable(ArrayList<ArrayList<Integer>> P, int[][] originalTransitions) {
         int[][] transitionTable = new int[P.size()][3];
-
-        for(int i = 0; i < P.size(); i++){
+        for (int i = 0; i < P.size(); i++) {
             ArrayList<Integer> list = P.get(i);
-            int newATransition = -1;
-            int newBTransition = -1;
-            for(int j = 0; j < list.size(); j++){
-                int aTransition = originalTransitions[j][0];
-                int bTransition = originalTransitions[j][1];
 
-                for(int k = 0; k < P.size(); k++){
-                    ArrayList<Integer> list_b = P.get(k);
-                    if(list_b.contains(aTransition)){
-                        newATransition = k;
+            int newConnectionA = -1;
+            int newConnectionB = -1;
+
+            for (int node : list) {
+                int oldConnectionA = originalTransitions[node][0];
+                int oldConnectionB = originalTransitions[node][1];
+                int TF = originalTransitions[node][2];
+
+                if(TF == 1){
+                    transitionTable[i][2] = 1;
+                }
+
+                for(int j = 0; j < P.size(); j++){
+                    if(P.get(j).contains(oldConnectionA)){
+                        newConnectionA = j;
                     }
 
-                    if(list_b.contains(bTransition)){
-                        newBTransition = k;
-                    }
-
-                    transitionTable[k][0] = newATransition;
-                    transitionTable[k][1] = newBTransition;
-
-                    for(Integer integer: list_b){
-                        if(originalTransitions[integer][2] == 1) {
-                            transitionTable[k][2] = 1;
-                        }else{
-                            transitionTable[k][2] = 0;
-                        }
+                    if(P.get(j).contains(oldConnectionB)){
+                        newConnectionB = j;
                     }
                 }
             }
+
+            transitionTable[i][0] = newConnectionA;
+            transitionTable[i][1] = newConnectionB;
         }
 
         return transitionTable;

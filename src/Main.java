@@ -1,34 +1,64 @@
-package NonBrokenHopefully;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-public class newMain {
-    //todo surround bfs with try catch block with a debug statement in the catch block to try understand the error.
+public class Main {
+    private static boolean testingMode = false;
     public static void main(String[] args) {
-
-
-        int max = 9, min = 8;
+        int max = 64, min = 16;
 
         Random random = new Random();
         int dfsaSize = random.nextInt((max - min) + 1) + min;
-        int startState = random.nextInt(dfsaSize + 1);
+        int startState = random.nextInt(dfsaSize);
 
         Hopcrofts hopcrofts = new Hopcrofts();
         BreadthFirstSearch bfs = new BreadthFirstSearch();
         DFSA dfsa = new DFSA(dfsaSize, startState);
 
-        dfsa.generateTransitions();
+        if(testingMode){
+            int[][] transitionTable = new int[5][3];
+            transitionTable[0][0] = 3;
+            transitionTable[0][1] = 2;
+            transitionTable[0][2] = 0;
+
+            transitionTable[1][0] = 3;
+            transitionTable[1][1] = 2;
+            transitionTable[1][2] = 0;
+
+            transitionTable[2][0] = 4;
+            transitionTable[2][1] = 0;
+            transitionTable[2][2] = 1;
+
+            transitionTable[3][0] = 0;
+            transitionTable[3][1] = 1;
+            transitionTable[3][2] = 1;
+
+            transitionTable[4][0] = 0;
+            transitionTable[4][1] = 4;
+            transitionTable[4][2] = 0;
+            int ss = 3;
+            dfsa.setStartState(ss);
+            dfsa.setTransitions(transitionTable);
+        }else{
+            dfsa.generateTransitions();
+        }
+
         System.out.println("-----");
-        ArrayList<Integer> unreachableStates = bfs.Bfs(dfsa.getTransitionTable(), dfsa.getStartState());
+        ArrayList<Integer> unreachable = bfs.Bfs(dfsa.getTransitionTable(), dfsa.getStartState());
+        removeUnreachableStates(dfsa, unreachable);
         System.out.println("-----");
-        dfsa = removeUnreachableStates(dfsa, unreachableStates);
         DFSA m = hopcrofts.hopcroft(dfsa, dfsa.getStartState());
+
         System.out.println("-----");
-        ArrayList<Integer> mBfs = bfs.Bfs(m.getTransitionTable(), m.getStartState());
+        unreachable = bfs.Bfs(m.getTransitionTable(), m.getStartState());
+        removeUnreachableStates(m, unreachable);
 
         System.out.println("-----");
         ArrayList<String> strings = generateTestStrings();
+        if(testingMode){
+            testStrings(dfsa, strings);
+            System.out.println("-----");
+        }
         testStrings(m, strings);
         System.out.println("-----");
         Tarjans t = new Tarjans();
@@ -95,8 +125,9 @@ public class newMain {
         ArrayList<String> testStrings = new ArrayList<>();
         Random random = new Random();
         for (int i = 0; i < 100; i++) {
-            StringBuilder sb = new StringBuilder();
-            for (int j = 0; j < random.nextInt(129); j++) {
+            int size = random.nextInt(30); //129
+            StringBuilder sb = new StringBuilder(size);
+            for (int j = 0; j < size; j++) {
                 int k = random.nextInt(101);
                 if (k <= 50) {
                     sb.append("a");
@@ -127,7 +158,7 @@ public class newMain {
             }
 
             System.out.print(counter + ": " + string);
-            if(transitionTable[currentState][2] == 1 && currentState != -1){
+            if(currentState != -1 && transitionTable[currentState][2] == 1){
                 System.out.println("::Accepted");
             }else{
                 System.out.println("::Rejected");

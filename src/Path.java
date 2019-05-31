@@ -1,8 +1,9 @@
+
 import java.util.ArrayList;
 
 class Path {
     private int currentLength;
-    private ArrayList<Node> visited;
+    private ArrayList<Integer>  visited;
 
     Path(){
         currentLength = 0;
@@ -13,15 +14,15 @@ class Path {
         currentLength++;
     }
 
-    void setVisited(Node node){
-        visited.add(node);
+    void addVisited(int index){
+        visited.add(index);
     }
 
     int getCurrentLength() {
         return currentLength;
     }
 
-    boolean checkVisited(Node node){
-        return visited.contains(node);
+    boolean checkVisited(int index){
+        return visited.contains(index);
     }
 }
