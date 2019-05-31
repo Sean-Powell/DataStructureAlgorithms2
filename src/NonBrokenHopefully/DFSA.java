@@ -11,6 +11,11 @@ class DFSA {
         transitions = new int[size][3];
     }
 
+    void debugState(int[][] debug_transitions, int startState) {
+        transitions = debug_transitions;
+        this.startState =  startState;
+    }
+
     int[][] getTransitionTable(){
         return transitions;
     }
@@ -20,17 +25,32 @@ class DFSA {
         for(int i = 0; i < transitions.length; i++){
             transitions[i][0] = random.nextInt(transitions.length);
             transitions[i][1] = random.nextInt(transitions.length);
-            transitions[i][2] = random.nextInt(2);
+            int acceptingChance = random.nextInt(101);
+            if(acceptingChance <= 50){
+                transitions[i][2] = 0;
+            }else{
+                transitions[i][2] = 1;
+            }
         }
 
         for(int i = 0; i < transitions.length; i++){
-            System.out.println(i + "- a: " + transitions[i][0] + " b: " + transitions[i][1]);
+            System.out.println(i + " - a: " + transitions[i][0] + ", b: " + transitions[i][1]);
         }
     }
+
+    void setTransitions(int[][] transitions){
+        this.transitions = transitions;
+    }
+
+    void setStartState(int startState){
+        this.startState = startState;
+    }
+
 
     int getStartState(){
         return startState;
     }
+
 
     int getTransition(int stateNumber, String transitionString){
         if(transitionString.equals("a")){

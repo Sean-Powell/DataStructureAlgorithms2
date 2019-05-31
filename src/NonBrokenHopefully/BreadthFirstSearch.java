@@ -31,7 +31,6 @@ class BreadthFirstSearch {
 
         System.out.println("Depth of tree is " + max);
         System.out.println("There is " + unreachableStatesCount + " unreachable states");
-        System.out.println("----------");
 
         return toRemove;
     }
@@ -42,6 +41,7 @@ class BreadthFirstSearch {
         }
 
         if(!path.checkVisited(index)){
+
             path.addVisited(index);
         }else{
             return;
@@ -52,7 +52,13 @@ class BreadthFirstSearch {
         }
 
         path.incrementLength();
-        createPaths(dfsa[index][0], path, dfsa);
-        createPaths(dfsa[index][1], path, dfsa);
+        if(dfsa[index][0] != -1){
+            createPaths(dfsa[index][0], path, dfsa);
+        }
+        if(dfsa[index][1] != -1){
+            createPaths(dfsa[index][1], path, dfsa);
+        }
+
+
     }
 }
